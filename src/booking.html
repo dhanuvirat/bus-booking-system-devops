@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Summary | Sashmi Lanka Travels</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="C:\Users\Administrator\Desktop\bus-booking-system-devops\src\styles\style.css">
+    <style>
+        .booking-layout {
+            display: flex;
+            gap: 40px;
+            max-width: 1000px;
+            margin: 50px auto;
+        }
+
+        .booking-form {
+            flex: 2;
+            padding: 40px;
+        }
+
+        .booking-summary-card {
+            flex: 1;
+            padding: 30px;
+            height: fit-content;
+        }
+
+        .input-box {
+            margin-bottom: 20px;
+        }
+
+        .input-box label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .input-box input,
+        .input-box select {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            outline: none;
+        }
+
+        .input-box input:focus {
+            border-color: var(--neon-blue);
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .payment-card {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .payment-card:hover,
+        .payment-card.active {
+            border-color: var(--neon-blue);
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .payment-card i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .receipt-box {
+            background: #1a1a1f;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #00f260;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .booking-layout {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="index.html" class="logo"><i class="fas fa-bus"></i> Sashmi Lanka Travels</a>
+    </nav>
+
+    <div class="container">
+        <h2 class="animate">Passenger Details</h2>
+
+        <div class="booking-layout animate">
+            <!-- Form -->
+            <div class="glass booking-form">
+                <form id="booking-form">
+                    <div class="input-box">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="John Doe" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Mobile Number (Sri Lanka)</label>
+                        <input type="tel" placeholder="07X XXX XXXX" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="john@example.com" required>
+                    </div>
+
+                    <div class="input-box">
+                        <label>Payment Method</label>
+                        <div class="payment-methods">
+                            <div class="payment-card active">
+                                <i class="fas fa-credit-card"></i>
+                                <p>Card</p>
+                            </div>
+                            <div class="payment-card">
+                                <i class="fas fa-mobile-alt"></i>
+                                <p>eZ Cash</p>
+                            </div>
+                            <div class="payment-card">
+                                <i class="fas fa-wallet"></i>
+                                <p>Pay at Bus</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="gradient-btn"
+                        style="width: 100%; margin-top: 20px; padding: 15px;">Confirm Booking</button>
+                    <p style="text-align: center; margin-top: 15px; color: var(--text-muted); font-size: 0.8rem;">Secure
+                        SSL Payment</p>
+                </form>
+            </div>
+
+            <!-- Summary -->
+            <div class="glass booking-summary-card">
+                <h3 style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px;">
+                    Booking Summary</h3>
+
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <span style="color: var(--text-muted);">Route</span>
+                    <span>Cmb - Kandy</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <span style="color: var(--text-muted);">Date</span>
+                    <span>25th Oct, 2026</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <span style="color: var(--text-muted);">Selected Seats</span>
+                    <span id="summary-seats">--</span>
+                </div>
+
+                <div
+                    style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 1.1rem;">Total Amount</span>
+                    <span id="summary-amount" style="font-size: 1.5rem; color: var(--neon-blue); font-weight: 700;">Rs.
+                        0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Success Modal -->
+    <div class="modal-overlay">
+        <div class="receipt-box animate">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h2>Booking Confirmed!</h2>
+            <p style="color: var(--text-muted); margin: 15px 0 30px 0;">Your e-ticket has been sent to your email.</p>
+            <button class="gradient-btn" onclick="window.location.href='index.html'">Back to Home</button>
+        </div>
+    </div>
+
+    <script src="C:\Users\Administrator\Desktop\bus-booking-system-devops\src\scripts"></script>
+</body>
+
+</html>
